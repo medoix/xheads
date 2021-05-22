@@ -2,16 +2,18 @@ package main
 
 import (
 	"fmt"
-	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"
 	"os/exec"
 	"sort"
 	"strings"
+
+	"gopkg.in/yaml.v2"
 )
 
 // Define config file location and expand ${HOME}
 var configPath = "${HOME}/.config/xheads/config.yml"
+
 func init() {
 	configPath = os.ExpandEnv(configPath)
 }
@@ -84,7 +86,6 @@ type LayoutConfig map[OutputName]OutputConfig
 
 func (lc *LayoutConfig) String() string {
 	result := make([]string, 0)
-	fmt.Println("test")
 	for outputName, outputConfig := range *lc {
 		result = append(result,
 			strings.Join([]string{outputName.String(), outputConfig.String()}, " "))
@@ -120,15 +121,15 @@ func makeXrandrScanCommand() string {
 }
 
 func scanConnectedOutputs() (outputs []string) {
-        cmd := makeXrandrScanCommand()
-        out, err := exec.Command("sh", "-c", cmd).Output()
-        if err != nil {
-                fmt.Println("Cannot read connected displays:", err)
-                return
-        }
-        lines := strings.Trim(string(out), "\n")
-        outputs = strings.Split(lines, "\n")
-        return
+	cmd := makeXrandrScanCommand()
+	out, err := exec.Command("sh", "-c", cmd).Output()
+	if err != nil {
+		fmt.Println("Cannot read connected displays:", err)
+		return
+	}
+	lines := strings.Trim(string(out), "\n")
+	outputs = strings.Split(lines, "\n")
+	return
 }
 
 func main() {
@@ -146,4 +147,5 @@ func main() {
 	fmt.Println("outputs: ", outputs)
 	fmt.Println("configPath: ", configPath)
 	fmt.Println("config: ", cfg)
+	//fmt.Println("layouts: ", Config[LayoutConfig])
 }
